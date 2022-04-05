@@ -1,65 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Calculator</title>
-	<link rel="stylesheet" href="calculator1.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="calculator1.css">
 </head>
 <body>
 
-	<div class="container">
-		<div class="display">
-			<input id="screen" type="text" value="0"> <!--value="0" ipv placeholder="0"-->
-		</div>
+    <div class="container">
+        <div class="display">
+            <input id="screen" type="text" placeholder="0">
+        </div>
 
-		<div class="btns">
-			<div class="row">
-				<button id="ce" onclick="backspc()">CE</button>
-				<button id="btn2" onclick="fact()">x!</button>
-				<button class="btn">(</button>
-				<button class="btn">)</button>
-				<button class="btn">%</button>
-				<button id="ac" onclick="screen.value=''">AC</button>
-			</div>
+        <div class="btns">
+            <div class="row">
+                <button id="ce" onclick="backspc()">CE</button>
+                <button id="btn2" onclick="fact()">x!</button>
+                <button class="btn">(</button>
+                <button class="btn">)</button>
+                <button class="btn">%</button>
+                <button id="ac" onclick="screen.value=''">AC</button>
+            </div>
 
-			<div class="row">
-				<button id="btn2" onclick="sin()">sin</button>
-				<button id="btn2" onclick="pi()">&pi;</button>
-				<button class="btn">7</button>
-				<button class="btn">8</button>
-				<button class="btn">9</button>
-				<button class="btn">÷</button>
-			</div>
+            <div class="row">
+                <button id="btn2" onclick="sin()">sin</button>
+                <button id="btn2" onclick="pi()">&pi;</button>
+                <button class="btn" action="inputNumber">7</button>
+                <button class="btn" action="inputNumber">8</button>
+                <button class="btn" action="inputNumber">9</button>
+                <button class="btn" action="startCalculate">÷</button>
+            </div>
 
-			<div class="row">
-				<button id="btn2" onclick="cos()">cos</button>
-				<button id="btn2" onclick="log()">log</button>
-				<button class="btn">4</button>
-				<button class="btn">5</button>
-				<button class="btn">6</button>
-				<button class="btn">*</button>
-			</div>
+            <div class="row">
+                <button id="btn2" onclick="cos()">cos</button>
+                <button id="btn2" onclick="log()">log</button>
+                <button class="btn" action="inputNumber">4</button>
+                <button class="btn" action="inputNumber">5</button>
+                <button class="btn" action="inputNumber">6</button>
+                <button class="btn" action="startCalculate">*</button>
+            </div>
 
-			<div class="row">
-				<button id="btn2" onclick="tan()">tan</button>
-				<button id="btn2" onclick="sqrt()">sqrt</button>
-				<button class="btn">1</button>
-				<button class="btn">2</button>
-				<button class="btn">3</button>
-				<button class="btn">-</button>
-			</div>
+            <div class="row">
+                <button id="btn2" onclick="tan()">tan</button>
+                <button id="btn2" onclick="sqrt()">sqrt</button>
+                <button class="btn" action="inputNumber">1</button>
+                <button class="btn" action="inputNumber">2</button>
+                <button class="btn" action="inputNumber">3</button>
+                <button class="btn" action="startCalculate">-</button>
+            </div>
 
-			<div class="row">
-				<button id="btn2" onclick="e()">e</button>
-				<button id="btn2" onclick="pow()">x<span style="position: relative; bottom: .4em; right: .1em; ">y</span></button>
-				<button class="btn">0</button>
-				<button class="btn">.</button>
-				<button onclick="screen.value=eval(screen.value);">=</button>
-				<button class="btn">+</button>
-			</div>
-		</div>
-	</div>
+            <div class="row">
+                <button id="btn2" onclick="e()">e</button>
+                <button id="btn2" onclick="pow()">x<span style="position: relative; bottom: .4em; right: .1em; ">y</span></button>
+                <button class="btn">0</button>
+                <button class="btn">.</button>
+                <button class="btn" action="endCalculate">=</button>
+                <button class="btn" action="startCalculate">+</button>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -67,6 +67,9 @@
 <script>
 var screen=document.querySelector('#screen');
 var btn=document.querySelectorAll('.btn');
+var initialValue, secondValue, calculateOperation, endResult, preventCalculation;
+
+var checkInitialValue = true;
 
 /* zorgt ervoor dat je niet kunt typen in het input veld */
 screen.addEventListener('keydown', (e) => {
@@ -75,82 +78,189 @@ screen.addEventListener('keydown', (e) => {
 
 for(item of btn)
 {
-	item.addEventListener('click',(e)=>{
-		btntext=e.target.innerText;
+    item.addEventListener('click',(e)=>{
+        // btntext=e.target.innerText;
 
-		if(btntext=='x')
-		{
-			btntext='*';
-		}
+        // if(btntext=='x')
+        // {
+        // 	btntext='*';
+        // }
 
-		if(btntext=='÷')
-		{
-			btntext='/';	
-		}
+        // if(btntext=='÷')
+        // {
+        // 	btntext='/';	
+        // }
+        if (e.target.getAttribute("action") === "inputNumber") {
+            inputNumber(e.target.innerText)
+        }
 
-		screen.value+=btntext;
-	});
+        if (e.target.getAttribute("action") === "startCalculate") {
+            startCalculate(e.target.innerText)
+        }
+
+        if (e.target.getAttribute("action") === "endCalculate") {
+            endCalculate(true);
+        }
+    });
 }
+
+function inputNumber(number){
+    console.log(checkInitialValue)
+
+    if (checkInitialValue === true) {
+        if (initialValue) {
+            checkInitialValue = false;
+            screen.value=""
+            screen.value += number;
+        } else {
+            screen.value += number;
+        }
+    } else {
+        if(secondValue) {
+            secondValue = undefined;
+            screen.value=""
+        }
+        screen.value += number;
+    }
+}
+
+function startCalculate(calculation) {
+    if(preventCalculation !== true) {
+        endCalculate();
+    }
+
+    preventCalculation = false;
+    calculateOperation = ""
+
+    if(!initialValue){
+        initialValue = screen.value ? screen.value : 0
+    } else {
+        secondValue = screen.value ? screen.value : 0
+    }
+
+    console.log("initial Value: ", initialValue);
+    console.log("second Value: ", secondValue)
+
+    calculateOperation = calculation;
+
+    console.log("calculateOperation: ", calculateOperation)
+}
+
+function endCalculate(preventCalculationWhenOperatorIsClickedNext) {
+    if (initialValue && !secondValue && calculateOperation && checkInitialValue === false) {
+        secondValue = screen.value ? screen.value : 0
+    }
+    
+    if (initialValue && secondValue && calculateOperation) {
+        switch(calculateOperation) {
+            case "+":
+                add(initialValue, secondValue);
+                break;
+            case "-":
+                subtract(initialValue, secondValue);
+                break;
+            case "*":
+                multiply(initialValue, secondValue);
+                break;
+            case "÷":
+                divide(initialValue, secondValue);
+                break;
+        }
+
+        initialValue = endResult;
+        if(preventCalculationWhenOperatorIsClickedNext === true) {
+            preventCalculation = true
+        } else {
+            preventCalculation = false;
+        }
+    }
+}
+
+const add = (a, b) => {
+    endResult = parseFloat(a) + parseFloat(b)
+    showResult(endResult)
+    console.log(endResult)
+};
+const subtract = (a, b) => {
+    endResult = parseFloat(a) - parseFloat(b)
+    showResult(endResult)
+    console.log(endResult)
+};
+const multiply = (a, b) => {
+    endResult = parseFloat(a) * parseFloat(b)
+    showResult(endResult)
+    console.log(endResult)
+};
+const divide = (a, b) => {
+    endResult = parseFloat(a) / parseFloat(b)
+    showResult(endResult)
+    console.log(endResult)
+};
+
+const showResult = (result) => {
+    screen.value = result
+}
+
 
 function sin()
 {
-	screen.value=Math.sin(screen.value);
+    screen.value=Math.sin(screen.value);
 }
 
 function cos()
 {
-	screen.value=Math.cos(screen.value);
+    screen.value=Math.cos(screen.value);
 }
 
 function tan()
 {
-	screen.value=Math.tan(screen.value);
+    screen.value=Math.tan(screen.value);
 }
 
 function pow()
 {
-	screen.value=Math.pow(screen.value,2);
+    screen.value=Math.pow(screen.value,2);
 }
 
 function sqrt()
 {
-	screen.value=Math.sqrt(screen.value,2);
+    screen.value=Math.sqrt(screen.value,2);
 }
 
 function log()
 {
-	screen.value=Math.log(screen.value);
+    screen.value=Math.log(screen.value);
 }
 
 function pi()
 {
-	screen.value= 3.14159265359;
+    screen.value= 3.14159265359;
 }
 
 function e()
 {
-	screen.value=2.71828182846;
+    screen.value=2.71828182846;
 }
 
 function fact()
 {
-	var i, num, f;
-	f=1
+    var i, num, f;
+    f=1
 
-	num=screen.value;
-	for(i=1; i<=num; i++)
-	{
-		f=f*i;
-	}
+    num=screen.value;
+    for(i=1; i<=num; i++)
+    {
+        f=f*i;
+    }
 
-	i=i-1;
+    i=i-1;
 
-	screen.value=f;
+    screen.value=f;
 }
 
 function backspc()
 {
-	screen.value=screen.value.substr(0,screen.value.length-1)
+    screen.value=screen.value.substr(0,screen.value.length-1)
 }
 </script>
 </html>

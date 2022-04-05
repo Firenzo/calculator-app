@@ -45,6 +45,11 @@ body
                 inset -8px -8px -8px #ffffff; /* browser zegt dat deze waarde niet geldig is */
 }
 
+.display #screen::placeholder
+{
+    color:black;
+}
+
 .btns
 {
     width: 100%;
