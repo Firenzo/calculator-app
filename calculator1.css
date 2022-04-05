@@ -83,11 +83,24 @@ body
                 -5px -5px 8px #ffffff;
 }
 
+.btns .row button.purple{
+    background: #ff3399;
+    color:#ffffff;
+}
+
 .btns .row  button:hover
 {
     box-shadow: inset 5px 5px 8px rgba(16,16,16,.1),
                 inset -5px -5px 8px #fff;
     background: #ffffff;
+}
+
+.btns .row button.purple:hover
+{
+    box-shadow: inset 5px 5px 8px #e60073,
+                inset -5px -5px 8px #ff3399;
+    background: #ff3399;
+
 }
 
 #eval
@@ -130,16 +143,8 @@ body
                 inset -5px -5px 8px #ff3399;
 }
 
-#btn2 
-{
-    background: #ff3399;
-    color: #fff;
-}
-
-
-#btn2:hover
-{
-    box-shadow: inset 5px 5px 8px #e60073,
-                inset -5px -5px 8px #ff3399;
-
+#square:after{
+    content: '2';
+    font-size:10px;
+    transform: translateY(10px);
 }

@@ -16,7 +16,7 @@
         <div class="btns">
             <div class="row">
                 <button id="ce" onclick="backspc()">CE</button>
-                <button id="btn2" onclick="fact()">x!</button>
+                <button class="btn purple" action="instantCalculation">x!</button>
                 <button class="btn">(</button>
                 <button class="btn">)</button>
                 <button class="btn">%</button>
@@ -24,8 +24,8 @@
             </div>
 
             <div class="row">
-                <button id="btn2" onclick="sin()">sin</button>
-                <button id="btn2" onclick="pi()">&pi;</button>
+                <button class="btn purple" onclick="sin()">sin</button>
+                <button class="btn purple" onclick="pi()">&pi;</button>
                 <button class="btn" action="inputNumber">7</button>
                 <button class="btn" action="inputNumber">8</button>
                 <button class="btn" action="inputNumber">9</button>
@@ -33,8 +33,8 @@
             </div>
 
             <div class="row">
-                <button id="btn2" onclick="cos()">cos</button>
-                <button id="btn2" onclick="log()">log</button>
+                <button class="btn purple" onclick="cos()">cos</button>
+                <button class="btn purple" onclick="log()">log</button>
                 <button class="btn" action="inputNumber">4</button>
                 <button class="btn" action="inputNumber">5</button>
                 <button class="btn" action="inputNumber">6</button>
@@ -42,8 +42,8 @@
             </div>
 
             <div class="row">
-                <button id="btn2" onclick="tan()">tan</button>
-                <button id="btn2" onclick="sqrt()">sqrt</button>
+                <button class="btn purple" onclick="tan()">tan</button>
+                <button class="btn purple" onclick="sqrt()">sqrt</button>
                 <button class="btn" action="inputNumber">1</button>
                 <button class="btn" action="inputNumber">2</button>
                 <button class="btn" action="inputNumber">3</button>
@@ -51,8 +51,8 @@
             </div>
 
             <div class="row">
-                <button id="btn2" onclick="e()">e</button>
-                <button id="btn2" onclick="pow()">x<span style="position: relative; bottom: .4em; right: .1em; ">y</span></button>
+                <button class="btn purple" onclick="e()">e</button>
+                <button id="square" class="btn purple" onclick="pow()">x</button>
                 <button class="btn">0</button>
                 <button class="btn">.</button>
                 <button class="btn" action="endCalculate">=</button>
@@ -71,6 +71,7 @@ var initialValue, secondValue, calculateOperation, endResult, preventCalculation
 
 var checkInitialValue = true;
 var preventOperationFunction = false;
+var instantCalc = false;
 
 /* zorgt ervoor dat je niet kunt typen in het input veld */
 screen.addEventListener('keydown', (e) => {
@@ -80,6 +81,7 @@ screen.addEventListener('keydown', (e) => {
 for(item of btn)
 {
     item.addEventListener('click',(e)=>{
+
         if (e.target.getAttribute("action") === "inputNumber") {
             inputNumber(e.target.innerText)
         }
@@ -94,6 +96,12 @@ for(item of btn)
 
         if (e.target.getAttribute("action") === "hardReset") {
             hardReset();
+        }
+
+        if (e.target.getAttribute("action") === "instantCalculation") {
+            instantCalc = true;
+            startCalculate(e.target.innerText);
+            endCalculate();
         }
     });
 }
@@ -127,6 +135,7 @@ function inputNumber(number){
 
 function startCalculate(calculation) {
     if(!preventOperationFunction){
+
         if(preventCalculation !== true) {
             endCalculate();
         }
@@ -160,7 +169,7 @@ function endCalculate(preventCalculationWhenOperatorIsClickedNext) {
         secondValue = screen.value ? screen.value : 0
     }
     
-    if (initialValue && secondValue && calculateOperation) {
+    if (initialValue && secondValue && calculateOperation || initialValue && !secondValue && instantCalc && calculateOperation  ) {
         switch(calculateOperation) {
             case "+":
                 add(initialValue, secondValue);
@@ -174,6 +183,9 @@ function endCalculate(preventCalculationWhenOperatorIsClickedNext) {
             case "÷":
                 divide(initialValue, secondValue);
                 break;
+            case "x!":
+                fact(initialValue);
+                break;
         }
 
         initialValue = endResult;
@@ -185,26 +197,45 @@ function endCalculate(preventCalculationWhenOperatorIsClickedNext) {
     }
 }
 
-const add = (a, b) => {
+function add (a, b) {
     endResult = parseFloat(a) + parseFloat(b)
     showResult(endResult)
     console.log(endResult)
 };
-const subtract = (a, b) => {
+function subtract (a, b) {
     endResult = parseFloat(a) - parseFloat(b)
     showResult(endResult)
     console.log(endResult)
 };
-const multiply = (a, b) => {
+function multiply (a, b) {
     endResult = parseFloat(a) * parseFloat(b)
     showResult(endResult)
     console.log(endResult)
 };
-const divide = (a, b) => {
+function divide (a, b) {
     endResult = parseFloat(a) / parseFloat(b)
     showResult(endResult)
     console.log(endResult)
 };
+
+function fact(number) {
+
+    console.log("faculty")
+    var i, f;
+    f=1
+
+    for(i=1; i<=number; i++)
+    {
+        f=f*i;
+    }
+
+    i=i-1;
+
+    console.log(f);
+
+    endResult = f;
+    showResult(endResult);
+}
 
 const showResult = (result) => {
     screen.value = result
@@ -262,21 +293,7 @@ function e()
     screen.value=2.71828182846;
 }
 
-function fact()
-{
-    var i, num, f;
-    f=1
 
-    num=screen.value;
-    for(i=1; i<=num; i++)
-    {
-        f=f*i;
-    }
-
-    i=i-1;
-
-    screen.value=f;
-}
 
 function backspc()
 {
