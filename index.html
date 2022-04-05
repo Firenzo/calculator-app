@@ -80,17 +80,6 @@ screen.addEventListener('keydown', (e) => {
 for(item of btn)
 {
     item.addEventListener('click',(e)=>{
-        // btntext=e.target.innerText;
-
-        // if(btntext=='x')
-        // {
-        // 	btntext='*';
-        // }
-
-        // if(btntext=='÷')
-        // {
-        // 	btntext='/';	
-        // }
         if (e.target.getAttribute("action") === "inputNumber") {
             inputNumber(e.target.innerText)
         }
