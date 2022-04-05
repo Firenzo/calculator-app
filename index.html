@@ -20,7 +20,7 @@
                 <button class="btn">(</button>
                 <button class="btn">)</button>
                 <button class="btn">%</button>
-                <button id="ac" onclick="screen.value=''">AC</button>
+                <button class="btn" id="ac" action="hardReset">AC</button>
             </div>
 
             <div class="row">
@@ -70,6 +70,7 @@ var btn=document.querySelectorAll('.btn');
 var initialValue, secondValue, calculateOperation, endResult, preventCalculation;
 
 var checkInitialValue = true;
+var preventOperationFunction = false;
 
 /* zorgt ervoor dat je niet kunt typen in het input veld */
 screen.addEventListener('keydown', (e) => {
@@ -101,19 +102,29 @@ for(item of btn)
         if (e.target.getAttribute("action") === "endCalculate") {
             endCalculate(true);
         }
+
+        if (e.target.getAttribute("action") === "hardReset") {
+            hardReset();
+        }
     });
 }
 
 function inputNumber(number){
     console.log(checkInitialValue)
 
+    if(preventCalculation) {
+        hardReset();
+    }
+
     if (checkInitialValue === true) {
         if (initialValue) {
             checkInitialValue = false;
             screen.value=""
             screen.value += number;
+            preventOperationFunction = false;
         } else {
             screen.value += number;
+            preventOperationFunction = false;
         }
     } else {
         if(secondValue) {
@@ -121,29 +132,38 @@ function inputNumber(number){
             screen.value=""
         }
         screen.value += number;
+        preventOperationFunction = false;
     }
 }
 
 function startCalculate(calculation) {
-    if(preventCalculation !== true) {
-        endCalculate();
+    if(!preventOperationFunction){
+        if(preventCalculation !== true) {
+            endCalculate();
+        }
+        calculateOperation = ""
+
+        if(!initialValue){
+            initialValue = screen.value ? screen.value : 0
+        } else {
+            secondValue = screen.value ? screen.value : 0
+        }
+
+        console.log("initial Value: ", initialValue);
+        console.log("second Value: ", secondValue);
+
+        calculateOperation = calculation;
+
+        console.log("calculateOperation: ", calculateOperation)
+    } else {
+        if(calculateOperation !== calculation) {
+            calculateOperation = calculation
+            console.log("calculateOperation: ", calculateOperation);
+        }
     }
 
     preventCalculation = false;
-    calculateOperation = ""
-
-    if(!initialValue){
-        initialValue = screen.value ? screen.value : 0
-    } else {
-        secondValue = screen.value ? screen.value : 0
-    }
-
-    console.log("initial Value: ", initialValue);
-    console.log("second Value: ", secondValue)
-
-    calculateOperation = calculation;
-
-    console.log("calculateOperation: ", calculateOperation)
+    preventOperationFunction = true;
 }
 
 function endCalculate(preventCalculationWhenOperatorIsClickedNext) {
@@ -199,6 +219,17 @@ const divide = (a, b) => {
 
 const showResult = (result) => {
     screen.value = result
+}
+
+const hardReset = () => {
+    initialValue = undefined;
+    secondValue = undefined;
+    calculateOperation = undefined;
+    endResult = undefined;
+    preventCalculation = undefined;
+    checkInitialValue = true;
+    preventOperationFunction = false;
+    screen.value="";
 }
 
 
